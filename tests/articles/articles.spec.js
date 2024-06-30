@@ -152,28 +152,6 @@ test('articles edit fields tab', async ({ page, testurl, grabs, language }) => {
     await page.locator('.button-cancel').click();
 });
 
-test('articles edit schema tab', async ({ page, testurl, grabs, language }) => {
-    await page.setViewportSize({
-        width: 1440,
-        height: 600,
-      });
-      // Open the list page.
-    await page.goto(testurl + 'option=com_content&view=articles');
-
-    const article_id = await page.locator('#cb0').inputValue();
-    const url = testurl + 'option=com_content&task=article.edit&id=' + article_id;
-    await page.goto(url);
-
-    // Find the Schema tab.
-    let btn = await page.locator('button[aria-controls="attrib-schema"]');
-    await btn.nth(0).click();
-
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-schema-tab.png', fullPage: true });
-
-    // Close the article or it will be left checked out.
-    await page.locator('.button-cancel').click();
-});
-
 test('articles edit publishing tab', async ({ page, testurl, grabs, language }) => {
     // Open the list page.
     await page.goto(testurl + 'option=com_content&view=articles');
@@ -204,7 +182,7 @@ test('articles edit associations tab', async ({ page, testurl, grabs, language }
     const url = testurl + 'option=com_content&task=article.edit&id=' + article_id;
     await page.goto(url);
 
-    // Find the Schema tab.
+    // Find the Associations tab.
     let btn = await page.locator('button[aria-controls="associations"]');
     await btn.nth(0).click();
 
@@ -309,7 +287,7 @@ test('articles categories batch', async ({ page, testurl, grabs, language, count
     await page.locator('.button-batch').click();
 
     await page.locator('#batch-category-id').selectOption('8');
-    //
+
     await page.screenshot({ path: grabs + language + '/images/articles/articles-categories-batch.png'});
 });
 

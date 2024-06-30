@@ -8,6 +8,8 @@ Clone Joomla, Checkout latest 6 version (6.0.0alpha-dev)
 About the Author / A brief biography / A brief biography Rows 3
 Article Sources / Brief list of sources for this article / Rows 3
 
+Disable Post Installation messages module - for ML Associations
+
 ### Install languages
 
 de, es, fr, nl, pt-br, ru
@@ -41,6 +43,10 @@ Create user Oddjob / oddjob / (oddjob1%)
 Create 3 Articles - Lorem Ipsum (en-GB), Lorem Ipsum (de-DE), Lorem Ipsum (fr-FR)
 Associate en-GB and de-DE (follow instructions in Common Elements / Edit
 Associations)
+
+## Multilingual Associations
+
+Create Lorem Ipsum (en-GB) and Lorem Ipsum (de-DE) and associate them
 
 ## Banners
 

@@ -228,6 +228,37 @@ test('articles edit category options tab', async ({ page, testurl, grabs, langua
     await page.locator('.button-cancel').click();
 });
 
+test('articles edit schema tab', async ({ page, testurl, grabs, language }) => {
+    await page.setViewportSize({
+        width: 1440,
+        height: 600,
+      });
+      // Open the list page.
+    await page.goto(testurl + 'option=com_content&view=articles');
+
+    const article_id = await page.locator('#cb0').inputValue();
+    const url = testurl + 'option=com_content&task=article.edit&id=' + article_id;
+    await page.goto(url);
+
+    // Find the Schema tab.
+    let btn = await page.locator('button[aria-controls="attrib-schema"]');
+    await btn.nth(0).click();
+
+    // Select the Article option
+    await page.locator('#jform_schema_schemaType').selectOption({index: 1});
+
+    await page.screenshot({ path: grabs + language + '/images/common-elements/articles-edit-schema-tab-article.png', fullPage: true });
+
+    // Select the Article option
+    await page.locator('#jform_schema_schemaType').selectOption({index: 7});
+
+    await page.screenshot({ path: grabs + language + '/images/common-elements/articles-edit-schema-tab-person.png', fullPage: true });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
+});
+
+
 /*
 test('element test', async ({ page, testurl, grabs, language }) => {
     await page.goto(testurl + 'option=com_content&view=articles');

@@ -36,3 +36,90 @@ test('contacts list', async ({ page, testurl, grabs, language }) => {
   await page.screenshot({ path: grabs + language + '/images/contacts/contacts-list.png'});
 });
 
+test('contacts edit contact tab', async ({ page, testurl, grabs, language }) => {
+    // Open the list page.
+    await page.goto(testurl + 'option=com_contact&view=contacts');
+
+    // Open the first item in the list
+    const contact_id = await page.locator('#cb0').inputValue();
+    const url = testurl + 'option=com_contact&task=contact.edit&id=' + contact_id;
+    await page.goto(url);
+
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-edit-contact-tab.png', fullPage: true });
+
+    // Close the contact or it will be left checked out.
+    await page.locator('.button-cancel').click();
+});
+
+test('contacts edit miscellaneous tab', async ({ page, testurl, grabs, language }) => {
+    // Open the list page.
+    await page.goto(testurl + 'option=com_contact&view=contacts');
+
+    // Open the first item in the list
+    const contact_id = await page.locator('#cb0').inputValue();
+    const url = testurl + 'option=com_contact&task=contact.edit&id=' + contact_id;
+    await page.goto(url);
+
+    // Find the Miscellaneous Information tab.
+    let btn = await page.locator('button[aria-controls="misc"]');
+    await btn.nth(0).click();
+
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-edit-miscellaneous-tab.png', fullPage: true });
+
+    // Close the contact or it will be left checked out.
+    await page.locator('.button-cancel').click();
+});
+
+test('contacts edit display tab', async ({ page, testurl, grabs, language }) => {
+    // Open the list page.
+    await page.goto(testurl + 'option=com_contact&view=contacts');
+
+    // Open the first item in the list
+    const contact_id = await page.locator('#cb0').inputValue();
+    const url = testurl + 'option=com_contact&task=contact.edit&id=' + contact_id;
+    await page.goto(url);
+
+    // Find the Miscellaneous Information tab.
+    let btn = await page.locator('button[aria-controls="attrib-display"]');
+    await btn.nth(0).click();
+
+    // This is a long page with lots of obvious fields - so show only viewport.
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-edit-display-tab.png'});
+
+    // Close the contact or it will be left checked out.
+    await page.locator('.button-cancel').click();
+});
+
+test('contacts edit form tab', async ({ page, testurl, grabs, language }) => {
+    // Open the list page.
+    await page.goto(testurl + 'option=com_contact&view=contacts');
+
+    // Open the first item in the list
+    const contact_id = await page.locator('#cb0').inputValue();
+    const url = testurl + 'option=com_contact&task=contact.edit&id=' + contact_id;
+    await page.goto(url);
+
+    // Find the Form tab.
+    let btn = await page.locator('button[aria-controls="attrib-email"]');
+    await btn.nth(0).click();
+
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-edit-form-tab.png', fullPage: true });
+
+    // Close the contact or it will be left checked out.
+    await page.locator('.button-cancel').click();
+});
+
+test('contacts edit category category tab', async ({ page, testurl, grabs, language, country }) => {
+    // Open the list page.
+    await page.goto(testurl + 'option=com_categories&view=categories&extension=com_contact');
+
+    // Open the first item in the list
+    const contact_id = await page.locator('#cb0').inputValue();
+    const url = testurl + 'option=com_categories&task=category.edit&id=' + contact_id +'&extension=com_contact';
+    await page.goto(url);
+
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-edit-category-category-tab.png', fullPage: true });
+
+    // Close the contact or it will be left checked out.
+    await page.locator('.button-cancel').click();
+});
