@@ -23,7 +23,7 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
 
 test.afterEach(async ({ language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test banners --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test articles --project firefox --reporter dot -g "${test.info().title}"\n`);
   });
 
 test('articles list', async ({ page, testurl, grabs, language }) => {

@@ -3,7 +3,27 @@ Install Joomla for Testing
 
 Clone Joomla, Checkout latest 6 version (6.0.0alpha-dev)
 
+### Create Field Groups
+
+Nature
+Plants
+Animals
+
+### Create Categories
+
+Nature
+Plants with Nature as Parent
+Animals with Nature as Parent
+
 ### Create Fields
+
+Latin name in Nature Group
+Flowering Season in Plants Group (see User tutorial)
+yyyy in Animals Group
+
+### Create Article
+
+Fuchsia ?
 
 About the Author / A brief biography / A brief biography Rows 3
 Article Sources / Brief list of sources for this article / Rows 3
