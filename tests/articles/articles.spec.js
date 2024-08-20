@@ -134,8 +134,8 @@ test('articles edit fields tab', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,
         height: 750,
-      });
-      // Open the list page.
+    });
+    // Open the list page.
     await page.goto(testurl + 'option=com_content&view=articles');
 
     const article_id = await page.locator('#cb0').inputValue();
@@ -402,7 +402,7 @@ test('articles featured list', async ({ page, testurl, grabs, language }) => {
     await page.screenshot({ path: grabs + language + '/images/articles/articles-options-articles-tab.png'});
   });
 
-  test('articles options editing layout tab', async ({ page, testurl, grabs, language }) => {
+test('articles options editing layout tab', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,
         height: 800,

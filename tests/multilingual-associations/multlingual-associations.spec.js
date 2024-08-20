@@ -40,13 +40,6 @@ test('multilingual associations list', async ({ page, testurl, grabs, language }
 
   // The Multilingual Associations Screenshot
   await page.screenshot({ path: grabs + language + '/images/multilingual-associations/multilingual-associations-list.png'});
-
-  // Go to the Associations edi page
-  await page.goto(testurl + 'option=com_associations&view=associations&layout=edit&itemtype=com_content.article&task=association.edit&id=8&target=de-DE%3A9%3Aedit');
-
-  // The Multilingual Associations Screenshot
-  await page.screenshot({ path: grabs + language + '/images/multilingual-associations/multilingual-associations-edit.png'});
-
 });
 
 test('multilingual associations edit', async ({ page, testurl, grabs, language }) => {
@@ -62,6 +55,6 @@ test('multilingual associations edit', async ({ page, testurl, grabs, language }
   await page.getByRole('link', { name: 'de-DE' }).first().click();
   await page.waitForTimeout(3000);
 
-  // The Multilingual Associations Screenshot
+  // The Multilingual Associations Edit Screenshot
   await page.screenshot({ path: grabs + language + '/images/multilingual-associations/multilingual-associations-edit.png'});
 });
