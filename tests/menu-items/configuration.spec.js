@@ -7,12 +7,12 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
     // Set timeout for this hook.
-    //test.setTimeout(5000);
+    test.setTimeout(60000);
     // Runs before each test and signs in each page.
     await page.goto(testurl);
     await page.locator('#mod-login-username').fill(username);
@@ -33,9 +33,9 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
     await page.waitForTimeout(3000);
 });
 
-test.afterEach(async ({ language, country }) => {
+test.afterEach(async ({ testurl, language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
   });
 
 test('site configuration options', async ({ page, testurl, grabs, language }) => {
@@ -45,14 +45,19 @@ test('site configuration options', async ({ page, testurl, grabs, language }) =>
       });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse1"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link for Site Configuration Options (data-type="xxx")
-    let btn2 = await fr.getByTestId('COM_CONFIG_CONFIG_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONFIG_CONFIG_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
@@ -66,14 +71,19 @@ test('menu item configuration display template options details', async ({ page, 
       });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse1"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link for Display Template Options (data-type="xxx")
-    let btn2 = await fr.getByTestId('COM_CONFIG_TEMPLATES_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONFIG_TEMPLATES_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 

@@ -1,106 +1,142 @@
-Install Joomla for Testing
-==========================
+# Method to capture Help screenshots
 
-Clone Joomla, Checkout latest 6 version (6.0.0alpha-dev)
+## Joomla Installations
 
-### Create Field Groups
+Create a separate Joomla installation for each supported language. Each should
+be named jcms6xx where xx is the language code. jcms6de may be used to capture
+screens for both English and German.
 
-Nature
-Plants
-Animals
+Go to the GitHub [Joomla repo](https://github.com/joomla/joomla-cms) and select
+the 6.0-dev branch. Scroll down to the *Steps to setup the local environment:*
+heading and follow the instructions to clone Joomla and set up a working site.
+Rename the site from joomla-cms to jcms6xx and use a database with a
+corresponding name. Do not use this site for anything other than screenshot
+capture.
 
-### Create Categories
+The method adopted mostly uses Multilingual Sample Data and Testing Sample Data
+but some preparation is needed first. This could be scripted!
 
-Nature
-Plants with Nature as Parent
-Animals with Nature as Parent
+## Prepare a Joomla installation for Screen Capture
 
-### Create Fields
+1.  Install Joomla - set admin user name to Superman
+    Set the Cookie Path to /jcms6xx
+    Set default list limit to 5.
+2.  Create Super User Playwright playwright (play123456)
+6.  Create a private message from Superman to Playwright:
+    Subject: Demonstration; Text: This is a demonstration Private Message.
+5.  Create group Oddjob with Special access.
+    Create user Oddjob / oddjob / (oddjob123%)
+    Edit Global Configuration: set Administrator login to Allowed for Oddjob
+    Edit Media / Options: set Access Admin Interface and below to Allowed.
+8.  Create user John Doe for user tests:
+    John Doe / johndoe / (johndoe123) / johndoe@example.com
+    Create a user note for John Doe:
+    Demonstration / Uncategorised / John Doe is a pseudonym for an unknown person.
+9.  Enable the System - Privacy Consent plugin.
+    Login to frontend as johndoe and confirm privacy consent. Then logout.
+    There may be a problem that shows the Subject as PLG_SYSTEM_PRIVACYCONSENT_SUBJECT
+    in the Privacy Consents list.
+    Find it in the database #__privacy_consents table and change to Privacy Policy
+    This just gives a better layout in tests.
+10. Create a Privacy Request. Login to backend as the playwright user:
+    create a request for johndoe@example.com / Export
+    Logout and login again as your normal Super Admin user.
+4.  The System - Schema.org Plugin needs to be enabled and have a
+    name inserted in the Name field, for example: Joomla Documentation Team
+7.  Enable the System - Redirect Plugin and go to System / Redirects to create
+    a New redirect:
+    Expired URL: about-me.html New URL: https://example.com/about-others.html
+    Comment: An example redirect.
+3.  Create two Content Fields:
+    About the Author / Textarea / Brief biography. / 4 Rows
+    Article Sources / Textarea / List of sources for this article. / 4 Rows
+    Create a Field Group: Nature / For fields about the natural world.
+10. Install the Weblinks component
+    First time try did not work - needed to create the table by
+    extracting sql from zip file. But next time it installed without problems.
+    Create a Category (Uncategorised) if not present and then a link:
+    Joomla Magazine Tutorials / https://docs.joomla.org/J4.x:Magazine_Articles
+    A list of articles with tutorial content for Joomla 4 and 5.
+11. OPTION: install Akeeba Backup and take a backup to use for more installations
+11. Install One Language: de or fr or nl (separate installs for each language)
+    Currently installing in J6 by file upload.
+12. Publish Content Language
+13. Install Multilingual Sample Data
+14. Install Testing Sample Data (NOT Blog Sample Data).
+15. Run the Smart Search Indexer
+    Create a Smart Search Filter as a test Super User (superman)
+    Articles by Joomla / Articles / Author: Joomla
+    In Smart Search Options set Gather Search Statistics to Yes.
+    In the frontend sidebar-left is a Smart Search Component item.
+    Search for some terms (lorem, animals, apples, english)
+16. Banners / Options /
+    Track Impressions = Yes
+    Track Clicks = Yes
+    In the Banner list, edit each item:
+    Set Shop 1 Banner Details / Client to Bookstore
+    Set Shop 2 Banner Details / Client to Shop
+    Set Support Joomla Banner Details / Client to Joomla
+    In the frontend Reload some page a few times and click the
+    Support Joomla Banner at the page bottom to generate some hits.
 
-Latin name in Nature Group
-Flowering Season in Plants Group (see User tutorial)
-yyyy in Animals Group
+## Ready to run the Playwright tests
 
-### Create Article
+Configure jtest.js to suit the local installation.
 
-Fuchsia ?
+Use VSCodium with the Playwright Test for VSCode extension installed. Open the
+Playwright folder and then try individual tests by clicking the tiny green
+tick to the left of the test title.
 
-About the Author / A brief biography / A brief biography Rows 3
-Article Sources / Brief list of sources for this article / Rows 3
+In the Playwright folder use the following command line for all tests:
+URL=http://localhost/jcms6de/administrator/index.php? LANGUAGE=en COUNTRY=en-GB \
+npx playwright test --project firefox --reporter dot
 
-Disable Post Installation messages module - for ML Associations
+Or this for all tests in a folder:
+URL=http://localhost/jcms6de/administrator/index.php? LANGUAGE=de COUNTRY=de-DE \
+npx playwright test articles --project firefox --reporter dot
 
-### Install languages
+Or this for one test in a folder:
+ceford@cliff Playwright % LANGUAGE=en COUNTRY=en-GB \
+npx playwright test menu-items --project firefox --reporter dot -g "privacy create request"
 
-de, es, fr, nl, pt-br, ru
+You can use --reporter html to have a html report named index.html located in the
+playwright-report folder.
 
-Enable in Content Languages
+The test files contain some code to indicate which tests are running and
+whether there are any problems. Sometimes a single test in one file does not
+succeed on one occasion but does on another. For example, if I have an edit
+page open in my browser, a test to take a screenshot of that page will fail
+because the page is checked out.
 
-Enable the System Language Filter plugin
+The output looks like this:
 
-Install the Multi-lingual sample data
+```
+Try command:
+URL=http://localhost/jcms6fr/administrator/index.php? LANGUAGE=fr COUNTRY=fr-FR npx playwright test fields --project firefox --reporter dot -g "field groups list"
+```
+You can copy the command and run it again from the command line. Look at the
+output to see where the failure occurred. Here is an example:
 
-Enable the schema plugin
+```
+  1) [firefox] › fields/fields.spec.js:62:5 › field groups list ────────────────────────────────────
 
-Some shots may need to be obtained manually:
-Turn on the Workflow option (Integration tab), capture this:
-articles-edit-category-workflow-tab.png
-Then turn it off again
+    Test timeout of 30000ms exceeded.
 
-## Playwright
+    Error: locator.inputValue: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#cb0')
 
-This is the Super User for tests
-    username: 'playwright',
-    password: '(play1234)',
 
-## Oddjob
+      70 |
+      71 |     // Open the first item in the list
+    > 72 |     const item_id = await page.locator('#cb0').inputValue();
+         |                                                ^
+      73 |     const url = testurl + 'option=com_fields&task=group.edit&id=' + item_id + '&context=com_content.article';
+      74 |     await page.goto(url);
+      75 |
 
-Create group Oddjob with Special access.
-Create user Oddjob / oddjob / (oddjob1%)
-
-## Articles Associationa
-
-Create 3 Articles - Lorem Ipsum (en-GB), Lorem Ipsum (de-DE), Lorem Ipsum (fr-FR)
-Associate en-GB and de-DE (follow instructions in Common Elements / Edit
-Associations)
-
-## Multilingual Associations
-
-Create Lorem Ipsum (en-GB) and Lorem Ipsum (de-DE) and associate them
-
-## Banners
-
-Create a new Client
-* Title: JDM International
-* Contact name: The CEO
-
-Create a new Banner:
-* Title Joomla Shop
-* URL https://community.joomla.org/the-joomla-shop.html#!/
-* Client: JDM International
-
-Create a Module
-* Title: Joomla Shop
-* Position: bottom-a
-
-Reload site page several times to increase impression count. Click banner a few
-times to increase Clicks count.
-
-## Contacts
-
-Create two contacts
-Jim Hawkins / Cabin Boy / jim.hawkins@example.com /
-Admiral Benbow Inn / Bristol / England
-Long John Silver / Cook / ljs@example.com / The Hispaniola
-
-## Snippets for Playwright
-For testing:
-    test.setTimeout(10000);
-
-    page.on('console', (msg) => {
-        console.log(msg);
-      });
-    console.log('some text or ...')
+        at /Users/ceford/Playwright/tests/fields/fields.spec.js:72:48
+```
 
 ## Playwright installation notes
 
@@ -139,7 +175,7 @@ Visit https://playwright.dev/docs/intro for more information. ✨
 
 Happy hacking! 🎭
 
-=====
+## Node
 
 To update node: https://blog.hubspot.com/website/update-node-js
 
@@ -149,19 +185,3 @@ npm install -g n
 n latest
 node -v
 npm outdated
-
-=====
-
-Message to Harald,
-
-Hello Harald,
-
-Since your message I looked up Cypress vs Playright and decided to give the latter a try. After much frustration I am finally getting somewhere and now completely agree that scripting the screenshots is the best way forward.
-
-Do you have a view on a screen resolution to use for capture? In the past I have limited screenshots to 1000 pixels wide and more recently 1200. Now I am inclined to go to 1400 or 1440 as 1400 is one of the Bootstrap breakpoints.
-
-I estimate that there are a little over 700 Help screenshots. With 1440 width and an average size of about 100Kb that would be about 70Mb in total for English alone.
-
-I think it would be best to use a standard data set for capture. Perhaps the Multilingual sample data. And mostly with Workflow turned off. Do you have a view on that?
-
-Some interesting problems have turned up. The Firefox browser works quite well but a screenshot of a modal dialog (batch for example) does not render the background so it is illegible. The Chromium browser will not render a screenshot with a modal dialog at all. Webkit (Safari) does everything well but ignores the viewport setting and uses my screen resolution.

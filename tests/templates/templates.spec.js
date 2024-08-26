@@ -7,7 +7,7 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
@@ -19,9 +19,9 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
     await loginBtn.click();
 });
 
-test.afterEach(async ({ language, country }) => {
+test.afterEach(async ({ testurl, language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test templates --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test templates --project firefox --reporter dot -g "${test.info().title}"\n`);
 });
 
 test('templates site list', async ({ page, testurl, grabs, language }) => {
@@ -96,7 +96,7 @@ test('templates site styles list', async ({ page, testurl, grabs, language }) =>
 test('templates edit style', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,
-        height: 500,
+        height: 1000,
     });
     await page.goto(testurl + 'option=com_templates&view=styles&client_id=0');
 
@@ -110,7 +110,7 @@ test('templates edit style', async ({ page, testurl, grabs, language }) => {
 
     // Find the Menu Assignment tab.
     await page.locator('button[aria-controls="assignment"]').first().click();
-    await page.screenshot({ path: grabs + language + '/images/templates/templates-site-edit-style-menu-assignment-tab.png', fullPage: true});
+    await page.screenshot({ path: grabs + language + '/images/templates/templates-site-edit-style-menu-assignment-tab.png'});
 
     // Close the item or it will be left checked out.
     await page.locator('.button-cancel').click();

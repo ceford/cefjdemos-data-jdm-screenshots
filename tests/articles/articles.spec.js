@@ -6,7 +6,7 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
@@ -21,17 +21,23 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
     await loginBtn.click();
 });
 
-test.afterEach(async ({ language, country }) => {
+test.afterEach(async ({ testurl, language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test articles --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test articles --project firefox --reporter dot -g "${test.info().title}"\n`);
   });
 
 test('articles list', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,
-        height: 1000,
-      });
-  await page.goto(testurl + 'option=com_content&view=articles');
+        height: 600,
+    });
+    await page.goto(testurl + 'option=com_content&view=articles');
+
+    // Sort the list by ID Ascending.
+    await page.locator('#list_fullordering').selectOption({value: 'a.ordering ASC'});
+
+    // Wait for 3 seconds
+    await page.waitForTimeout(3000);
 
   // Make the columns visible
   const buttons = await page.locator('.dropdown-toggle');
@@ -44,41 +50,18 @@ test('articles list', async ({ page, testurl, grabs, language }) => {
   await columns.nth(5).setChecked(false);
   await columnsButton.click();
 
-  await page.screenshot({ path: grabs + language + '/images/articles/articles-list.png'});
+  await page.screenshot({ path: grabs + language + '/images/articles/articles-list.png', fullPage: true });
 });
 
-test('articles list batch', async ({ page, testurl, grabs, language, country }) => {
-    await page.setViewportSize({
-        width: 1440,
-        height: 720,
-      });
-    await page.goto(testurl + 'option=com_content&view=articles');
-
-    // Make the columns visible.
-    const buttons = await page.locator('.dropdown-toggle');
-    const columnsButton = buttons.last();
-    await columnsButton.click();
-
-    // Uncheck some of them.
-    const columns = await page.locator('.form-check-input');
-    await columns.nth(9).setChecked(false);
-    await columns.nth(5).setChecked(false);
-    await columnsButton.click();
-
-    // Enable the batch button.
-    await page.locator('#cb0').check();
-    await page.locator('.button-status-group').click();
-
-    // Select by class button-batch.
-    await page.locator('.button-batch').click();
-    await page.locator('#batch-category-id').selectOption({index: 1});
-
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-list-batch.png'});
-});
-
-test('articles edit content tab', async ({ page, testurl, grabs, language }) => {
+test('articles edit', async ({ page, testurl, grabs, language }) => {
     // Open the list page.
     await page.goto(testurl + 'option=com_content&view=articles');
+
+    // Sort the list by ID Ascending.
+    await page.locator('#list_fullordering').selectOption({value: 'a.ordering ASC'});
+
+    // Wait for 3 seconds
+    await page.waitForTimeout(3000);
 
     // Open the first item in the list
     const article_id = await page.locator('#cb0').inputValue();
@@ -87,44 +70,19 @@ test('articles edit content tab', async ({ page, testurl, grabs, language }) => 
 
     // Find the CMS Content button.
     await page.locator('.tox-tbtn').nth(0).click();
-
     await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-content-tab.png', fullPage: true });
 
-    // Close the article or it will be left checked out.
-    await page.locator('.button-cancel').click();
-});
-
-test('articles edit images tab', async ({ page, testurl, grabs, language }) => {
-    // Open the list page.
-    await page.goto(testurl + 'option=com_content&view=articles');
-
-    const article_id = await page.locator('#cb0').inputValue();
-    const url = testurl + 'option=com_content&task=article.edit&id=' + article_id;
-    await page.goto(url);
-
     // Find the Images and Links tab.
-    let btn = await page.locator('button[aria-controls="images"]');
-    await btn.nth(0).click();
-
+    await page.locator('button[aria-controls="images"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-images-tab.png', fullPage: true });
 
-    // Close the article or it will be left checked out.
-    await page.locator('.button-cancel').click();
-});
-
-test('articles edit options tab', async ({ page, testurl, grabs, language }) => {
-    // Open the list page.
-    await page.goto(testurl + 'option=com_content&view=articles');
-
-    const article_id = await page.locator('#cb0').inputValue();
-    const url = testurl + 'option=com_content&task=article.edit&id=' + article_id;
-    await page.goto(url);
-
     // Find the Options tab.
-    let btn = await page.locator('button[aria-controls="attrib-attribs"]');
-    await btn.nth(0).click();
-
+    await page.locator('button[aria-controls="attrib-attribs"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-options-tab.png'});
+
+    // Find the Configure Edit Screen tab.
+    await page.locator('button[aria-controls="editor"]').first().click();
+    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-editor-tab.png', fullPage: true });
 
     // Close the article or it will be left checked out.
     await page.locator('.button-cancel').click();
@@ -143,90 +101,9 @@ test('articles edit fields tab', async ({ page, testurl, grabs, language }) => {
     await page.goto(url);
 
     // Find the Fields tab.
-    let btn = await page.locator('button[aria-controls="attrib-fields-0"]');
-    await btn.nth(0).click();
+    await page.locator('button[aria-controls="attrib-fields-0"]').nth(0).click();
 
     await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-fields-tab.png', fullPage: true });
-
-    // Close the article or it will be left checked out.
-    await page.locator('.button-cancel').click();
-});
-
-test('articles edit publishing tab', async ({ page, testurl, grabs, language }) => {
-    // Open the list page.
-    await page.goto(testurl + 'option=com_content&view=articles');
-
-    const article_id = await page.locator('#cb0').inputValue();
-    const url = testurl + 'option=com_content&task=article.edit&id=' + article_id;
-    await page.goto(url);
-
-    // Find the Publishing tab.
-    let btn = await page.locator('button[aria-controls="publishing"]');
-    await btn.nth(0).click();
-
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-publishing-tab.png', fullPage: true });
-
-    // Close the article or it will be left checked out.
-    await page.locator('.button-cancel').click();
-});
-
-test('articles edit associations tab', async ({ page, testurl, grabs, language }) => {
-    await page.setViewportSize({
-        width: 1440,
-        height: 600,
-      });
-      // Open the list page.
-    await page.goto(testurl + 'option=com_content&view=articles');
-
-    const article_id = await page.locator('#cb0').inputValue();
-    const url = testurl + 'option=com_content&task=article.edit&id=' + article_id;
-    await page.goto(url);
-
-    // Find the Associations tab.
-    let btn = await page.locator('button[aria-controls="associations"]');
-    await btn.nth(0).click();
-
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-associations-tab.png', fullPage: true });
-
-    // Close the article or it will be left checked out.
-    await page.locator('.button-cancel').click();
-});
-
-test('articles edit editor tab', async ({ page, testurl, grabs, language }) => {
-    await page.setViewportSize({
-        width: 1440,
-        height: 750,
-      });
-      // Open the list page.
-    await page.goto(testurl + 'option=com_content&view=articles');
-
-    const article_id = await page.locator('#cb0').inputValue();
-    const url = testurl + 'option=com_content&task=article.edit&id=' + article_id;
-    await page.goto(url);
-
-    // Find the Images and Links tab.
-    let btn = await page.locator('button[aria-controls="editor"]');
-    await btn.nth(0).click();
-
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-editor-tab.png', fullPage: true });
-
-    // Close the article or it will be left checked out.
-    await page.locator('.button-cancel').click();
-});
-
-test('articles edit permissions tab', async ({ page, testurl, grabs, language }) => {
-    // Open the list page.
-    await page.goto(testurl + 'option=com_content&view=articles');
-
-    const article_id = await page.locator('#cb0').inputValue();
-    const url = testurl + 'option=com_content&task=article.edit&id=' + article_id;
-    await page.goto(url);
-
-    // Find the tab.
-    let btn = await page.locator('button[aria-controls="permissions"]');
-    await btn.nth(0).click();
-
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-permissions-tab.png', fullPage: true });
 
     // Close the article or it will be left checked out.
     await page.locator('.button-cancel').click();
@@ -255,40 +132,6 @@ test('articles categories list', async ({ page, testurl, grabs, language }) => {
     await columnsButton.click();
 
     await page.screenshot({ path: grabs + language + '/images/articles/articles-categories-list.png'});
-  });
-
-test('articles categories batch', async ({ page, testurl, grabs, language, country }) => {
-    await page.setViewportSize({
-        width: 1440,
-        height: 720,
-      });
-      await page.goto(testurl + 'option=com_categories&view=categories&extension=com_content');
-      // Need more width for dutch
-      if (language === 'nl') {
-          await page.locator('#menu-collapse').click();
-      }
-      // Make the columns visible
-      const buttons = await page.locator('.dropdown-toggle');
-      const columnsButton = buttons.last();
-      await columnsButton.click();
-
-      // Uncheck some of them - Author and Hits
-      const columns = await page.locator('.form-check-input');
-      // Hide Access and Association
-      await columns.nth(8).setChecked(false);
-      await columns.nth(7).setChecked(false);
-      await columnsButton.click();
-
-    // Enable the batch button.
-    await page.locator('#cb0').check();
-    await page.locator('.button-status-group').click();
-
-    // Select by class button-batch.
-    await page.locator('.button-batch').click();
-
-    await page.locator('#batch-category-id').selectOption('8');
-
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-categories-batch.png'});
 });
 
 test('articles edit category category tab', async ({ page, testurl, grabs, language, country }) => {
@@ -303,6 +146,11 @@ test('articles edit category category tab', async ({ page, testurl, grabs, langu
     await link.first().click();
 
     await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-category-category-tab.png', fullPage: true });
+
+    // Find the Publishing tab.
+    let btn = await page.locator('button[aria-controls="publishing"]');
+    await btn.nth(0).click();
+    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-category-publishing-tab.png', fullPage: true });
 
     // Close the article or it will be left checked out.
     await page.locator('.button-cancel').click();
@@ -324,48 +172,6 @@ test('articles edit category publishing tab', async ({ page, testurl, grabs, lan
     await btn.nth(0).click();
 
     await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-category-publishing-tab.png', fullPage: true });
-
-    // Close the article or it will be left checked out.
-    await page.locator('.button-cancel').click();
-});
-
-test('articles edit category associations tab', async ({ page, testurl, grabs, language, country }) => {
-    // Open the list page.
-    await page.goto(testurl + 'option=com_categories&view=categories&extension=com_content');
-
-    // Search for the selected language.
-    await page.locator('#filter_search').fill(country);
-    await page.locator('.filter-search-bar__button').click();
-
-    let link = page.getByRole('link',{name: country});
-    await link.first().click();
-
-    // Find the Associations tab.
-    let btn = await page.locator('button[aria-controls="associations"]');
-    await btn.nth(0).click();
-
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-category-associations-tab.png', fullPage: true });
-
-    // Close the article or it will be left checked out.
-    await page.locator('.button-cancel').click();
-});
-
-test('articles edit category permissions tab', async ({ page, testurl, grabs, language, country }) => {
-    // Open the list page.
-    await page.goto(testurl + 'option=com_categories&view=categories&extension=com_content');
-
-    // Search for the selected language.
-    await page.locator('#filter_search').fill(country);
-    await page.locator('.filter-search-bar__button').click();
-
-    let link = page.getByRole('link',{name: country});
-    await link.first().click();
-
-    // Find the Permissions tab.
-    let btn = await page.locator('button[aria-controls="rules"]');
-    await btn.nth(0).click();
-
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-category-permissions-tab.png', fullPage: true });
 
     // Close the article or it will be left checked out.
     await page.locator('.button-cancel').click();
@@ -442,9 +248,9 @@ test('articles options category tab', async ({ page, testurl, grabs, language })
     await btn.nth(0).click();
 
     await page.screenshot({ path: grabs + language + '/images/articles/articles-options-categories-tab.png'});
-  });
+});
 
-  test('articles options blog layouts tab', async ({ page, testurl, grabs, language }) => {
+test('articles options blog layouts tab', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,
         height: 800,
@@ -455,13 +261,13 @@ test('articles options category tab', async ({ page, testurl, grabs, language })
     let btn = await page.locator('button[aria-controls="blog_default_parameters"]');
     await btn.nth(0).click();
 
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-options-blog-layouts-tab.png'});
-  });
+    await page.screenshot({ path: grabs + language + '/images/articles/articles-options-blog-layouts-tab.png', fullPage: true});
+});
 
-  test('articles options list layouts tab', async ({ page, testurl, grabs, language }) => {
+test('articles options list layouts tab', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,
-        height: 800,
+        height: 950,
       });
     await page.goto(testurl + 'option=com_config&view=component&component=com_content');
 
@@ -470,7 +276,7 @@ test('articles options category tab', async ({ page, testurl, grabs, language })
     await btn.nth(0).click();
 
     await page.screenshot({ path: grabs + language + '/images/articles/articles-options-list-layouts-tab.png'});
-  });
+});
 
   test('articles options shared tab', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({

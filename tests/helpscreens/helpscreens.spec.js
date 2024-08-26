@@ -6,7 +6,7 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
@@ -23,7 +23,7 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
 
 test.afterEach(async ({ page, language, country }) => {
   if (test.info().status !== test.info().expectedStatus) {
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test banners --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test banners --project firefox --reporter dot -g "${test.info().title}"\n`);
   }
 });
 

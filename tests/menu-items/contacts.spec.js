@@ -7,12 +7,12 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
     // Set timeout for this hook.
-    //test.setTimeout(5000);
+    test.setTimeout(60000);
     // Runs before each test and signs in each page.
     await page.goto(testurl);
     await page.locator('#mod-login-username').fill(username);
@@ -33,9 +33,9 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
     await page.waitForTimeout(3000);
 });
 
-test.afterEach(async ({ language, country }) => {
+test.afterEach(async ({ testurl, language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
   });
 
 test('create contact', async ({ page, testurl, grabs, language }) => {
@@ -45,18 +45,26 @@ test('create contact', async ({ page, testurl, grabs, language }) => {
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse2"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link for Create Contact (data-type="xxx")
-    let btn2 = await fr.getByTestId('COM_CONTACT_FORM_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONTACT_FORM_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-create-contact-details-tab.png'});
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('featured contacts', async ({ page, testurl, grabs, language }) => {
@@ -66,32 +74,37 @@ test('featured contacts', async ({ page, testurl, grabs, language }) => {
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse2"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link for Featured Contacts (data-type="xxx")
-    let btn2 = await fr.getByTestId('COM_CONTACT_FEATURED_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONTACT_FEATURED_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-featured-contacts-details-tab.png'});
 
     // Find the List Layouts tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-advanced"]');
-    await btn3.first().click();
+    await page.locator('button[aria-controls="attrib-advanced"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-featured-contacts-list-layouts-tab.png', fullPage: true });
 
     // Find the Form tab.
-    let btn4 = await page.locator('button[aria-controls="attrib-contact"]');
-    await btn4.first().click();
+    await page.locator('button[aria-controls="attrib-contact"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-featured-contacts-form-tab.png', fullPage: true });
 
     // Find the Mail Options tab.
-    let btn5 = await page.locator('button[aria-controls="attrib-Contact_Form"]');
-    await btn5.first().click();
+    await page.locator('button[aria-controls="attrib-Contact_Form"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-featured-contacts-mail-options-tab.png', fullPage: true });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('list all categories in a contact category tree', async ({ page, testurl, grabs, language }) => {
@@ -101,43 +114,45 @@ test('list all categories in a contact category tree', async ({ page, testurl, g
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse2"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link for Featured Contacts (data-type="xxx")
-    let btn2 = await fr.getByTestId('COM_CONTACT_CATEGORIES_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONTACT_CATEGORIES_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-list-all-categories-tree-details-tab.png'});
 
     // Find the Categories tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-basic"]');
-    await btn3.first().click();
+    await page.locator('button[aria-controls="attrib-basic"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-list-all-categories-tree-categories-tab.png', fullPage: true });
 
     // Find the Category tab.
-    let btn4 = await page.locator('button[aria-controls="attrib-category"]');
-    await btn4.first().click();
+    await page.locator('button[aria-controls="attrib-category"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-list-all-categories-tree-category-tab.png', fullPage: true });
 
     // Find the List Layouts tab.
-    let btn5 = await page.locator('button[aria-controls="attrib-advanced"]');
-    await btn5.first().click();
+    await page.locator('button[aria-controls="attrib-advanced"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-list-all-categories-tree-list-layouts-tab.png', fullPage: true });
 
     // Find the Contact Display Options tab.
-    let btn6 = await page.locator('button[aria-controls="attrib-contact"]');
-    await btn6.first().click();
+    await page.locator('button[aria-controls="attrib-contact"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-list-all-categories-tree-contact-display-options.png', fullPage: true });
 
     // Find the Mail Options tab.
-    let btn7 = await page.locator('button[aria-controls="attrib-Contact_Form"]');
-    await btn7.first().click();
+    await page.locator('button[aria-controls="attrib-Contact_Form"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-list-all-categories-tree-mail-options-tab.png', fullPage: true });
 
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('list contacts in a category', async ({ page, testurl, grabs, language }) => {
@@ -147,22 +162,29 @@ test('list contacts in a category', async ({ page, testurl, grabs, language }) =
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse2"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link for Featured Contacts (data-type="xxx")
-    let btn2 = await fr.getByTestId('COM_CONTACT_CATEGORIES_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONTACT_CATEGORIES_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-list-contacts-in-a-category-details-tab.png'});
 
     // Find the Category tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-basic"]');
-    await btn3.first().click();
+    await page.locator('button[aria-controls="attrib-basic"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-list-contacts-in-a-category-category-tab.png', fullPage: true });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('single contact', async ({ page, testurl, grabs, language }) => {
@@ -172,26 +194,31 @@ test('single contact', async ({ page, testurl, grabs, language }) => {
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse2"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link for Single Contact (data-type="xxx")
-    let btn2 = await fr.getByTestId('COM_CONTACT_CONTACT_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONTACT_CONTACT_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-single-contact-details-tab.png'});
 
     // Find the Contact Display Options tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-params"]');
-    await btn3.first().click();
+    await page.locator('button[aria-controls="attrib-params"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-single-contact-contact-display-options-tab.png', fullPage: true });
 
     // Find the Mail Options tab.
-    let btn4 = await page.locator('button[aria-controls="attrib-Contact_Form"]');
-    await btn4.first().click();
+    await page.locator('button[aria-controls="attrib-Contact_Form"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/contacts-single-contact-mail-options-tab.png', fullPage: true });
 
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });

@@ -7,12 +7,12 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
     // Set timeout for this hook.
-    //test.setTimeout(5000);
+    test.setTimeout(60000);
     // Runs before each test and signs in each page.
     await page.goto(testurl);
     await page.locator('#mod-login-username').fill(username);
@@ -33,9 +33,9 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
     await page.waitForTimeout(3000);
 });
 
-test.afterEach(async ({ language, country }) => {
+test.afterEach(async ({ testurl, language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
 });
 
 test('menu item archived articles', async ({ page, testurl, grabs, language }) => {
@@ -45,31 +45,34 @@ test('menu item archived articles', async ({ page, testurl, grabs, language }) =
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse0"]');
-    await btn.first().click();
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link that has data-type="COM_CONTENT_ARCHIVE_VIEW_DEFAULT_TITLE"
-    let btn2 = fr.getByTestId('COM_CONTENT_ARCHIVE_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONTENT_ARCHIVE_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
+    // Grab the Details tab.
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-archived-articles-details-tab.png'});
 
     // Find the Link Type tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-basic"]');
-    await btn3.first().click();
-
+    await page.locator('button[aria-controls="attrib-basic"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-archived-articles-archive-tab.png', fullPage: true });
 
     // Find the Options tab to store in menu-items-common.
-    let btn4 = await page.locator('button[aria-controls="attrib-articles"]');
-    await btn4.first().click();
-
+    await page.locator('button[aria-controls="attrib-articles"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items-common/articles-article-options.png', fullPage: true });
 
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('menu item category blog', async ({ page, testurl, grabs, language }) => {
@@ -80,36 +83,39 @@ test('menu item category blog', async ({ page, testurl, grabs, language }) => {
 
     // Select the Articles accordion button
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse0"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
-    await page.waitForTimeout(3000);
+    //await page.waitForTimeout(3000);
 
     // Select the link that has data-type="COM_CONTENT_CATEGORY_VIEW_BLOG_TITLE"
-    let btn2 = fr.getByTestId('COM_CONTENT_CATEGORY_VIEW_BLOG_TITLE');
-    await btn2.first().click();
-    // Wait for 3 seconds
-    await page.waitForTimeout(3000);
+    await fr.getByTestId('COM_CONTENT_CATEGORY_VIEW_BLOG_TITLE').first().click();
 
+    // Wait for 3 seconds
+    //await page.waitForTimeout(3000);
+
+    // Grab the Details tab.
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-category-blog-details-tab.png'});
 
     // Find the Category tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-basic"]');
-    await btn3.first().click();
-
+    await page.locator('button[aria-controls="attrib-basic"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-category-blog-category-tab.png', fullPage: true });
 
     // Find the Blog Layout.
-    let btn4 = await page.locator('button[aria-controls="attrib-advanced"]');
-    await btn4.first().click();
-
+    await page.locator('button[aria-controls="attrib-advanced"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-category-blog-blog-layout-tab.png', fullPage: true });
 
     // Find the Integration tab to store in menu-items-common.
-    let btn5 = await page.locator('button[aria-controls="attrib-integration"]');
-    await btn5.first().click();
-
+    await page.locator('button[aria-controls="attrib-integration"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items-common/articles-category-blog-integration.png', fullPage: true });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('menu item category list', async ({ page, testurl, grabs, language }) => {
@@ -120,30 +126,35 @@ test('menu item category list', async ({ page, testurl, grabs, language }) => {
 
     // Select the Articles accordion button
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse0"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
-    await page.waitForTimeout(3000);
+    //await page.waitForTimeout(3000);
 
     // Select the link that has data-type="COM_CONTENT_CATEGORY_VIEW_DEFAULT_TITLE"
-    let btn2 = fr.getByTestId('COM_CONTENT_CATEGORY_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONTENT_CATEGORY_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
+    // Grab the Details tab.
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-category-list-details-tab.png'});
 
     // Find the Category tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-basic"]');
-    await btn3.first().click();
-
+    await page.locator('button[aria-controls="attrib-basic"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-category-list-category-tab.png', fullPage: true });
 
     // Find the List Layout.
-    let btn4 = await page.locator('button[aria-controls="attrib-advanced"]');
-    await btn4.first().click();
-
+    await page.locator('button[aria-controls="attrib-advanced"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-category-list-list-layouts-tab.png', fullPage: true });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('menu item create article', async ({ page, testurl, grabs, language }) => {
@@ -154,24 +165,31 @@ test('menu item create article', async ({ page, testurl, grabs, language }) => {
 
     // Select the Articles accordion button
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse0"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
-    await page.waitForTimeout(3000);
+    // await page.waitForTimeout(3000);
 
     // Select the link that has data-type="COM_CONTENT_FORM_VIEW_DEFAULT_TITLE"
-    let btn2 = fr.getByTestId('COM_CONTENT_FORM_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONTENT_FORM_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
+    // Grab the Details tab.
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-create-article-details-tab.png'});
 
     // Find the Options tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-basic"]');
-    await btn3.first().click();
-
+    await page.locator('button[aria-controls="attrib-basic"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-create-article-options-tab.png', fullPage: true });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('menu item featured', async ({ page, testurl, grabs, language }) => {
@@ -182,24 +200,31 @@ test('menu item featured', async ({ page, testurl, grabs, language }) => {
 
     // Select the Articles accordion button
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse0"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
-    await page.waitForTimeout(3000);
+    // await page.waitForTimeout(3000);
 
     // Select the link that has data-type="COM_CONTENT_FEATURED_VIEW_DEFAULT_TITLE"
-    let btn2 = fr.getByTestId('COM_CONTENT_FEATURED_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONTENT_FEATURED_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
+    // Grab the Details tab.
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-featured-details-tab.png'});
 
     // Find the Blog Layout.
-    let btn4 = await page.locator('button[aria-controls="attrib-advanced"]');
-    await btn4.first().click();
-
+    await page.locator('button[aria-controls="attrib-advanced"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-featured-blog-layout-tab.png', fullPage: true });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('menu item list all categories', async ({ page, testurl, grabs, language }) => {
@@ -210,48 +235,47 @@ test('menu item list all categories', async ({ page, testurl, grabs, language })
 
     // Select the Articles accordion button
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse0"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link that has data-type="COM_CONTENT_CATEGORIES_VIEW_DEFAULT_TITLE"
-    let btn2 = fr.getByTestId('COM_CONTENT_CATEGORIES_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONTENT_CATEGORIES_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
+    // Grab the Details tab.
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-list-all-categories-details-tab.png'});
 
     // Find the Categories tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-basic"]');
-    await btn3.first().click();
-
+    await page.locator('button[aria-controls="attrib-basic"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-list-all-categories-categories-tab.png', fullPage: true });
 
     // Find the Category tab tab.
-    let btn4 = await page.locator('button[aria-controls="attrib-category"]');
-    await btn4.first().click();
-
+    await page.locator('button[aria-controls="attrib-category"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-list-all-categories-category-tab.png', fullPage: true });
 
     // Find the Blog Layout tab.
-    let btn5 = await page.locator('button[aria-controls="attrib-blog"]');
-    await btn5.first().click();
-
+    await page.locator('button[aria-controls="attrib-blog"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-list-all-categories-blog-layout-tab.png', fullPage: true });
 
     // Find the List Layouts tab.
-    let btn6 = await page.locator('button[aria-controls="attrib-advanced"]');
-    await btn6.first().click();
-
+    await page.locator('button[aria-controls="attrib-advanced"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-list-all-categories-list-layouts-tab.png', fullPage: true });
 
     // Find the Shared tab.
-    let btn7 = await page.locator('button[aria-controls="attrib-shared"]');
-    await btn7.first().click();
-
+    await page.locator('button[aria-controls="attrib-shared"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-list-all-categories-shared-tab.png', fullPage: true });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('menu item single article', async ({ page, testurl, grabs, language }) => {
@@ -262,16 +286,25 @@ test('menu item single article', async ({ page, testurl, grabs, language }) => {
 
     // Select the Articles accordion button
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse0"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link that has data-type="COM_CONTENT_ARTICLE_VIEW_DEFAULT_TITLE"
-    let btn2 = fr.getByTestId('COM_CONTENT_ARTICLE_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_CONTENT_ARTICLE_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
+    // Grabe the Details tab.
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-single-article-details-tab.png'});
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });

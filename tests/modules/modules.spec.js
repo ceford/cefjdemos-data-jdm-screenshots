@@ -7,7 +7,7 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
@@ -22,16 +22,16 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
     await loginBtn.click();
 });
 
-test.afterEach(async ({ language, country }) => {
+test.afterEach(async ({ testurl, language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test menus --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test menus --project firefox --reporter dot -g "${test.info().title}"\n`);
 });
 
 // Example common tabs for all modules
 test('modules custom', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,
-        height: 550,
+        height: 1000,
     });
     // Custom module (Modules, Menu Assignment, Options, Advanced and Permissions tabs)
     await page.goto(testurl + 'option=com_modules&task=module.add&client_id=0&eid=44');
@@ -41,7 +41,7 @@ test('modules custom', async ({ page, testurl, grabs, language }) => {
     await page.locator('button[aria-controls="assignment"]').first().click();
     // Select the Only on the pages selected option
     await page.locator('#jform_assignment').selectOption('1');
-    await page.screenshot({ path: grabs + language + '/images/modules/modules-custom-menu-assignment-tab.png', fullPage: true });
+    await page.screenshot({ path: grabs + language + '/images/modules/modules-custom-menu-assignment-tab.png'});
 
     // Find the Options tab and save it in the (common) modules.
     await page.locator('button[aria-controls="attrib-options"]').first().click();

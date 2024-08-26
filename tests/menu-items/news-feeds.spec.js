@@ -7,12 +7,12 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
     // Set timeout for this hook.
-    //test.setTimeout(5000);
+    test.setTimeout(60000);
     // Runs before each test and signs in each page.
     await page.goto(testurl);
     await page.locator('#mod-login-username').fill(username);
@@ -32,9 +32,9 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
     await page.waitForTimeout(3000);
 });
 
-test.afterEach(async ({ language, country }) => {
+test.afterEach(async ({ testurl, language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
   });
 
 test('list all categories in a news feed category tree', async ({ page, testurl, grabs, language }) => {
@@ -44,38 +44,41 @@ test('list all categories in a news feed category tree', async ({ page, testurl,
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse3"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link for List all Categories in a News Feed Category tree
-    let btn2 = await fr.getByTestId('COM_NEWSFEEDS_CATEGORIES_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_NEWSFEEDS_CATEGORIES_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
-
     await page.screenshot({ path: grabs + language + '/images/menu-items/news-feeds-list-all-categories-details-tab.png'});
 
     // Find the Categories tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-basic"]');
-    await btn3.first().click();
+    await page.locator('button[aria-controls="attrib-basic"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/news-feeds-list-all-categories-tree-categories-tab.png', fullPage: true });
 
     // Find the Category tab.
-    let btn4 = await page.locator('button[aria-controls="attrib-category"]');
-    await btn4.first().click();
+    await page.locator('button[aria-controls="attrib-category"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/news-feeds-list-all-categories-tree-category-tab.png', fullPage: true });
 
     // Find the List Layouts tab.
-    let btn5 = await page.locator('button[aria-controls="attrib-advanced"]');
-    await btn5.first().click();
+    await page.locator('button[aria-controls="attrib-advanced"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/news-feeds-list-all-categories-tree-list-layouts-tab.png', fullPage: true });
 
     // Find the Newfeed Display Options tab.
-    let btn6 = await page.locator('button[aria-controls="attrib-newsfeed"]');
-    await btn6.first().click();
+    await page.locator('button[aria-controls="attrib-newsfeed"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/news-feeds-list-all-categories-tree-feed-display-options-tab.png', fullPage: true });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('list news feeds in a category', async ({ page, testurl, grabs, language }) => {
@@ -85,32 +88,37 @@ test('list news feeds in a category', async ({ page, testurl, grabs, language })
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse3"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link for List News Feeds in a Category (data-type="xxx")
-    let btn2 = await fr.getByTestId('COM_NEWSFEEDS_CATEGORY_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_NEWSFEEDS_CATEGORY_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
     await page.screenshot({ path: grabs + language + '/images/menu-items/news-feeds-list-newsfeeds-in-a-category-details-tab.png'});
 
     // Find the Category tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-basic"]');
-    await btn3.first().click();
+    await page.locator('button[aria-controls="attrib-basic"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/news-feeds-list-newsfeeds-in-a-category-category-tab.png', fullPage: true });
 
     // Find the List Layouts tab.
-    let btn5 = await page.locator('button[aria-controls="attrib-advanced"]');
-    await btn5.first().click();
+    await page.locator('button[aria-controls="attrib-advanced"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/news-feeds-list-newfeeds-in-a-category-list-layouts-tab.png', fullPage: true });
 
     // Find the Newfeed Display Options tab.
-    let btn6 = await page.locator('button[aria-controls="attrib-newsfeed"]');
-    await btn6.first().click();
+    await page.locator('button[aria-controls="attrib-newsfeed"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/news-feeds-list-newfeeds-in-a-category-feed-display-options-tab.png', fullPage: true });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('single news feed', async ({ page, testurl, grabs, language }) => {
@@ -120,21 +128,27 @@ test('single news feed', async ({ page, testurl, grabs, language }) => {
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse3"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link for List News Feeds in a Category (data-type="xxx")
-    let btn2 = await fr.getByTestId('COM_NEWSFEEDS_NEWSFEED_VIEW_DEFAULT_TITLE');
-    await btn2.first().click();
+    await fr.getByTestId('COM_NEWSFEEDS_NEWSFEED_VIEW_DEFAULT_TITLE').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
     await page.screenshot({ path: grabs + language + '/images/menu-items/news-feeds-single-news-feed-details-tab.png'});
 
     // Find the Feed Display Options tab.
-    let btn3 = await page.locator('button[aria-controls="attrib-basic"]');
-    await btn3.first().click();
+    await page.locator('button[aria-controls="attrib-basic"]').first().click();
     await page.screenshot({ path: grabs + language + '/images/menu-items/news-feeds-single-news-feed-feed-display-options-tab.png', fullPage: true });
 
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });

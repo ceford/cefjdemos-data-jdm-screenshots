@@ -6,7 +6,7 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
@@ -21,19 +21,15 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
     await loginBtn.click();
 });
 
-test.afterEach(async ({ language, country }) => {
+test.afterEach(async ({ testurl, language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test contacts --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test contacts --project firefox --reporter dot -g "${test.info().title}"\n`);
   });
 
 test('contacts list', async ({ page, testurl, grabs, language }) => {
-    await page.setViewportSize({
-        width: 1440,
-        height: 480,
-      });
   await page.goto(testurl + 'option=com_contact&view=contacts');
 
-  await page.screenshot({ path: grabs + language + '/images/contacts/contacts-list.png'});
+  await page.screenshot({ path: grabs + language + '/images/contacts/contacts-list.png', fullPage: true});
 });
 
 test('contacts edit contact tab', async ({ page, testurl, grabs, language }) => {

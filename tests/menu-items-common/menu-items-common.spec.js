@@ -7,7 +7,7 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
@@ -22,9 +22,9 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
     await loginBtn.click();
 });
 
-test.afterEach(async ({ language, country }) => {
+test.afterEach(async ({ testurl, language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
   });
 
 test('menu item details', async ({ page, testurl, grabs, language }) => {
@@ -119,16 +119,16 @@ test('menu item associations', async ({ page, testurl, grabs, language }) => {
 test('menu item module assignment', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,
-        height: 715,
-      });
-  await page.goto(testurl + 'option=com_menus&view=items&menutype=mainmenu');
+        height: 1000,
+    });
+    await page.goto(testurl + 'option=com_menus&view=items&menutype=mainmenu');
 
-  // Select the New button
-  await page.locator('.button-new').first().click();
+    // Select the New button
+    await page.locator('.button-new').first().click();
 
     // Find the Link Type tab.
     let btn = await page.locator('button[aria-controls="modules"]');
     await btn.nth(0).click();
 
-    await page.screenshot({ path: grabs + language + '/images/menu-items-common/menu-item-module-assignment.png', fullPage: true });
+    await page.screenshot({ path: grabs + language + '/images/menu-items-common/menu-item-module-assignment.png'});
 });

@@ -6,7 +6,7 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
@@ -23,7 +23,7 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
 
 test.afterEach(async ({ page, language, country }) => {
   if (test.info().status !== test.info().expectedStatus) {
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test banners --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test banners --project firefox --reporter dot -g "${test.info().title}"\n`);
   }
 });
 
@@ -53,6 +53,12 @@ test('articles edit publishing tab', async ({ page, testurl, grabs, language }) 
     // Open the list page.
     await page.goto(testurl + 'option=com_content&view=articles');
 
+    // Sort the list by ID Ascending.
+    await page.locator('#list_fullordering').selectOption({value: 'a.ordering ASC'});
+
+    // Wait for 3 seconds
+    await page.waitForTimeout(3000);
+
     const article_id = await page.locator('#cb0').inputValue();
     const url = testurl + 'option=com_content&task=article.edit&id=' + article_id;
     await page.goto(url);
@@ -63,7 +69,7 @@ test('articles edit publishing tab', async ({ page, testurl, grabs, language }) 
 
     await page.screenshot({ path: grabs + language + '/images/common-elements/articles-edit-publishing-tab.png', fullPage: true });
 
-    // Find the Publishing tab.
+    // Find the Associations tab.
     btn = await page.locator('button[aria-controls="associations"]');
     await btn.nth(0).click();
 
@@ -99,8 +105,8 @@ test('media options permissions tab', async ({ page, testurl, grabs, language })
     // Find the Permissions tab.
     await page.locator('button[aria-controls="permissions"]').first().click();
 
-    // Select Oddjob permission-10
-    await page.locator('button[aria-controls="permission-10"]').first().click();
+    // Select Publisher permission-5
+    await page.locator('button[aria-controls="permission-5"]').first().click();
 
     await page.screenshot({
         path: grabs + language + '/images/common-elements/media-options-permissions-tab.png',
@@ -113,6 +119,12 @@ test('articles list batch', async ({ page, testurl, grabs, language, country }) 
         height: 720,
       });
     await page.goto(testurl + 'option=com_content&view=articles');
+
+    // Sort the list by ID Ascending.
+    await page.locator('#list_fullordering').selectOption({value: 'a.ordering ASC'});
+
+    // Wait for 3 seconds
+    await page.waitForTimeout(3000);
 
     // Make the columns visible.
     const buttons = await page.locator('.dropdown-toggle');
@@ -235,6 +247,12 @@ test('articles edit schema tab', async ({ page, testurl, grabs, language }) => {
       });
       // Open the list page.
     await page.goto(testurl + 'option=com_content&view=articles');
+
+    // Sort the list by ID Ascending.
+    await page.locator('#list_fullordering').selectOption({value: 'a.ordering ASC'});
+
+    // Wait for 3 seconds
+    await page.waitForTimeout(3000);
 
     const article_id = await page.locator('#cb0').inputValue();
     const url = testurl + 'option=com_content&task=article.edit&id=' + article_id;

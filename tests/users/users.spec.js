@@ -7,7 +7,7 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
@@ -19,9 +19,9 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
     await loginBtn.click();
 });
 
-test.afterEach(async ({ language, country }) => {
+test.afterEach(async ({ testurl, language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test users --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test users --project firefox --reporter dot -g "${test.info().title}"\n`);
 });
 
 // Take care to limit the displayed list to a single john doe user
@@ -98,6 +98,12 @@ test('users groups', async ({ page, testurl, grabs, language }) => {
         height: 500,
     });
     await page.goto(testurl + 'option=com_users&view=groups');
+
+    // Select the list limit button
+    await page.locator('#list_limit').selectOption({value: '10'});
+
+    // Wait for 3 seconds for the page to reoload.
+    await page.waitForTimeout(3000);
     await page.screenshot({ path: grabs + language + '/images/users/users-groups-list.png', fullPage: true});
 
     // Find the New button.
@@ -142,10 +148,6 @@ test('users viewing access levels', async ({ page, testurl, grabs, language }) =
 
 // Create a user note for John Doe before using this text
 test('users user notes', async ({ page, testurl, grabs, language }) => {
-    await page.setViewportSize({
-        width: 1440,
-        height: 600,
-    });
     await page.goto(testurl + 'option=com_users&view=notes');
     await page.screenshot({ path: grabs + language + '/images/users/users-user-notes-list.png'});
 

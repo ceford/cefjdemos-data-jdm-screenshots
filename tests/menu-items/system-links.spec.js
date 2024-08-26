@@ -7,12 +7,12 @@ test.use({
 });
 
 test.beforeAll(async ({language}) => {
-    console.log('Language: ' + language);
+    //console.log('Language: ' + language);
 });
 
 test.beforeEach(async ({ page, testurl, country, username, password }) => {
     // Set timeout for this hook.
-    //test.setTimeout(5000);
+    test.setTimeout(60000);
     // Runs before each test and signs in each page.
     await page.goto(testurl);
     await page.locator('#mod-login-username').fill(username);
@@ -33,9 +33,9 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
 
 });
 
-test.afterEach(async ({ language, country }) => {
+test.afterEach(async ({ testurl, language, country }) => {
     if (test.info().status !== test.info().expectedStatus)
-    console.log(`\nTry command:\nLANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
+    console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test menu-items --project firefox --reporter dot -g "${test.info().title}"\n`);
 });
 
 test('system links menu heading', async ({ page, testurl, grabs, language }) => {
@@ -45,8 +45,13 @@ test('system links menu heading', async ({ page, testurl, grabs, language }) => 
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse6"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
@@ -66,18 +71,25 @@ test('system links menu item alias', async ({ page, testurl, grabs, language }) 
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse6"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link that has data-type="alias"
-    let btn2 = await fr.getByTestId('alias');
-    await btn2.first().click();
+    await fr.getByTestId('alias').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
-
     await page.screenshot({ path: grabs + language + '/images/menu-items/system-links-menu-item-alias-details-tab.png'});
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('system links separator', async ({ page, testurl, grabs, language }) => {
@@ -87,18 +99,26 @@ test('system links separator', async ({ page, testurl, grabs, language }) => {
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse6"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link that has data-type="separator"
-    let btn2 = await fr.getByTestId('separator');
-    await btn2.first().click();
+    await fr.getByTestId('separator').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     await page.screenshot({ path: grabs + language + '/images/menu-items/system-links-separator-details-tab.png'});
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('system links url', async ({ page, testurl, grabs, language }) => {
@@ -108,16 +128,23 @@ test('system links url', async ({ page, testurl, grabs, language }) => {
     });
 
     const fr = page.frameLocator('.iframe-content');
-    let btn = fr.locator('button[aria-controls="collapse6"]');
-    await btn.first().click();
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
 
     // Select the link that has data-type="url"
-    let btn2 = await fr.getByTestId('url');
-    await btn2.first().click();
+    await fr.getByTestId('url').first().click();
+
     // Wait for 3 seconds
     await page.waitForTimeout(3000);
-
     await page.screenshot({ path: grabs + language + '/images/menu-items/system-links-url-details-tab.png'});
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
