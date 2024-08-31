@@ -230,6 +230,8 @@ test('articles edit category options tab', async ({ page, testurl, grabs, langua
     let link = page.getByRole('link',{name: country});
     await link.first().click();
 
+    await page.screenshot({ path: grabs + language + '/images/common-elements/articles-edit-category-category-tab.png', fullPage: true });
+
     // Find the Options tab.
     let btn = await page.locator('button[aria-controls="attrib-options"]');
     await btn.nth(0).click();
@@ -275,14 +277,3 @@ test('articles edit schema tab', async ({ page, testurl, grabs, language }) => {
     // Close the article or it will be left checked out.
     await page.locator('.button-cancel').click();
 });
-
-
-/*
-test('element test', async ({ page, testurl, grabs, language }) => {
-    await page.goto(testurl + 'option=com_content&view=articles');
-
-    await page.locator('#j-main-container').screenshot({
-        path: grabs + language + '/images/help-screens/element-screenshot.png',
-    });
-});
-*/

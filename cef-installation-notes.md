@@ -22,61 +22,65 @@ but some preparation is needed first. This could be scripted!
     Set the Cookie Path to /jcms6xx
     Set default list limit to 5.
 2.  Create Super User Playwright playwright (play123456)
-6.  Create a private message from Superman to Playwright:
+3.  Create a private message from Superman to Playwright:
     Subject: Demonstration; Text: This is a demonstration Private Message.
-5.  Create group Oddjob with Special access.
-    Create user Oddjob / oddjob / (oddjob123%)
+4.  Create group Oddjob with Special access.
+    Create user Oddjob / oddjob / (oddjob123%) in Group Oddjob (not Registered)
     Edit Global Configuration: set Administrator login to Allowed for Oddjob
-    Edit Media / Options: set Access Admin Interface and below to Allowed.
-8.  Create user John Doe for user tests:
+    Edit Media / Options: set Access Admin Interface, Create, Delete and Edit
+    to Allowed.
+5.  Create user John Doe for user tests:
     John Doe / johndoe / (johndoe123) / johndoe@example.com
-    Create a user note for John Doe:
+6.  Create a user note for John Doe:
     Demonstration / Uncategorised / John Doe is a pseudonym for an unknown person.
-9.  Enable the System - Privacy Consent plugin.
+10. Enable the System - Privacy Consent plugin.
     Login to frontend as johndoe and confirm privacy consent. Then logout.
     There may be a problem that shows the Subject as PLG_SYSTEM_PRIVACYCONSENT_SUBJECT
     in the Privacy Consents list.
     Find it in the database #__privacy_consents table and change to Privacy Policy
     This just gives a better layout in tests.
-10. Create a Privacy Request. Login to backend as the playwright user:
+11. Create a Privacy Request. Login to backend as the playwright user:
     create a request for johndoe@example.com / Export
     Logout and login again as your normal Super Admin user.
-4.  The System - Schema.org Plugin needs to be enabled and have a
+12. The System - Schema.org Plugin needs to be enabled and have a
     name inserted in the Name field, for example: Joomla Documentation Team
-7.  Enable the System - Redirect Plugin and go to System / Redirects to create
+13. Enable the System - Redirect Plugin and go to System / Redirects to create
     a New redirect:
     Expired URL: about-me.html New URL: https://example.com/about-others.html
     Comment: An example redirect.
-3.  Create two Content Fields:
+14. Create two Content Fields:
     About the Author / Textarea / Brief biography. / 4 Rows
     Article Sources / Textarea / List of sources for this article. / 4 Rows
-    Create a Field Group: Nature / For fields about the natural world.
-10. Install the Weblinks component
+15. Create an Article Field Group: Nature / For fields about the natural world.
+16. Install the Weblinks component
     First time try did not work - needed to create the table by
     extracting sql from zip file. But next time it installed without problems.
     Create a Category (Uncategorised) if not present and then a link:
     Joomla Magazine Tutorials / https://docs.joomla.org/J4.x:Magazine_Articles
     A list of articles with tutorial content for Joomla 4 and 5.
-11. OPTION: install Akeeba Backup and take a backup to use for more installations
-11. Install One Language: de or fr or nl (separate installs for each language)
+17. Install the Joomla Patchtester (there is an Options Help screen).
+18. OPTION: install Akeeba Backup and take a backup to use for more installations.
+    ???? Then uninstall Akeeba Backup to save space in Admin menu.
+
+19. Install One Language: de or fr or nl (separate installs for each language)
     Currently installing in J6 by file upload.
-12. Publish Content Language
-13. Install Multilingual Sample Data
-14. Install Testing Sample Data (NOT Blog Sample Data).
-15. Run the Smart Search Indexer
-    Create a Smart Search Filter as a test Super User (superman)
+20. Publish Content Language
+21. Install Multilingual Sample Data
+22. Install Testing Sample Data (NOT Blog Sample Data).
+23. Run the Smart Search Indexer
+    Create a Smart Search Filter as the Superman Super User
     Articles by Joomla / Articles / Author: Joomla
     In Smart Search Options set Gather Search Statistics to Yes.
     In the frontend sidebar-left is a Smart Search Component item.
     Search for some terms (lorem, animals, apples, english)
-16. Banners / Options /
+24. Banners / Options /
     Track Impressions = Yes
     Track Clicks = Yes
     In the Banner list, edit each item:
     Set Shop 1 Banner Details / Client to Bookstore
     Set Shop 2 Banner Details / Client to Shop
     Set Support Joomla Banner Details / Client to Joomla
-    In the frontend Reload some page a few times and click the
+    In the frontend Reload some pages a few times and click the
     Support Joomla Banner at the page bottom to generate some hits.
 
 ## Ready to run the Playwright tests

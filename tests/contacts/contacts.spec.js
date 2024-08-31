@@ -105,6 +105,16 @@ test('contacts edit form tab', async ({ page, testurl, grabs, language }) => {
     await page.locator('.button-cancel').click();
 });
 
+test('contacts categories list', async ({ page, testurl, grabs, language }) => {
+    await page.setViewportSize({
+        width: 1600,
+        height: 750,
+    });
+    await page.goto(testurl + 'option=com_categories&view=categories&extension=com_contact');
+
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-categories-list.png', fullPage: true});
+});
+
 test('contacts edit category category tab', async ({ page, testurl, grabs, language, country }) => {
     // Open the list page.
     await page.goto(testurl + 'option=com_categories&view=categories&extension=com_contact');
@@ -119,3 +129,30 @@ test('contacts edit category category tab', async ({ page, testurl, grabs, langu
     // Close the contact or it will be left checked out.
     await page.locator('.button-cancel').click();
 });
+
+test('contacts options contact tab', async ({ page, testurl, grabs, language }) => {
+    await page.goto(testurl + 'option=com_config&view=component&component=com_contact');
+
+    // Grab the contact tab - a long page of settings.
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-options-contact-tab.png'});
+
+    // Grab the Icons tab - another long one.
+    await page.locator('button[aria-controls="Icons"]').first().click();
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-options-icons-tab.png'});
+
+    // Grab the Category tab.
+    await page.locator('button[aria-controls="Category"]').first().click();
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-options-category-tab.png', fullPage: true });
+
+    // Grab the Categories tab.
+    await page.locator('button[aria-controls="categories"]').first().click();
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-options-categories-tab.png' });
+
+    // Grab the List Layouts tab.
+    await page.locator('button[aria-controls="contacts"]').first().click();
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-options-list-layouts-tab.png'});
+
+    // Grab the Form tab.
+    await page.locator('button[aria-controls="Contact_Form"]').first().click();
+    await page.screenshot({ path: grabs + language + '/images/contacts/contacts-options-form-tab.png', fullPage: true });
+  });
