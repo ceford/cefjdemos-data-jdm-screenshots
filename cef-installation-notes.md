@@ -36,9 +36,18 @@ but some preparation is needed first. This could be scripted!
 10. Enable the System - Privacy Consent plugin.
     Login to frontend as johndoe and confirm privacy consent. Then logout.
     There may be a problem that shows the Subject as PLG_SYSTEM_PRIVACYCONSENT_SUBJECT
-    in the Privacy Consents list.
-    Find it in the database #__privacy_consents table and change to Privacy Policy
-    This just gives a better layout in tests.
+    instead of *Privacy Policy* in the Privacy Consents list. It is due to this
+    code missing from:
+    `plugins/system/privacyconsent/src/Extension/PrivacyConsent.php` from line 33.
+```
+    /**
+     * Load the language file on instantiation.
+     *
+     * @var    boolean
+     * @since  3.9.0
+     */
+    protected $autoloadLanguage = true;
+```
 11. Create a Privacy Request. Login to backend as the playwright user:
     create a request for johndoe@example.com / Export
     Logout and login again as your normal Super Admin user.

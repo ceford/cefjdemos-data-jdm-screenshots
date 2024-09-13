@@ -177,6 +177,11 @@ test('modules who is online', async ({ page, testurl, grabs, language }) => {
     await page.screenshot({ path: grabs + language + '/images/modules-site/modules-whos-online-module-tab.png', fullPage: true});
 });
 
+test('modules weblinks', async ({ page, testurl, grabs, language }) => {
+    await page.goto(testurl + 'option=com_modules&task=module.add&client_id=0&eid=246');
+    await page.screenshot({ path: grabs + language + '/images/modules-site/modules-weblinks-module-tab.png', fullPage: true});
+});
+
 test('modules wrapper', async ({ page, testurl, grabs, language }) => {
     await page.goto(testurl + 'option=com_modules&task=module.add&client_id=0&eid=56');
     await page.screenshot({ path: grabs + language + '/images/modules-site/modules-wrapper-module-tab.png', fullPage: true});

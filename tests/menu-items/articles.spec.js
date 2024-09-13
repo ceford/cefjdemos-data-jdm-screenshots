@@ -102,13 +102,13 @@ test('menu item category blog', async ({ page, testurl, grabs, language }) => {
     // Grab the Details tab.
     await page.screenshot({ path: grabs + language + '/images/menu-items/articles-category-blog-details-tab.png'});
 
-    // Find the Category tab.
+    // Find the Category tab. This one is now a common item.
     await page.locator('button[aria-controls="attrib-basic"]').first().click();
-    await page.screenshot({ path: grabs + language + '/images/menu-items/articles-category-blog-category-tab.png', fullPage: true });
+    await page.screenshot({ path: grabs + language + '/images/menu-items-common/articles-category-blog-category-tab.png', fullPage: true });
 
-    // Find the Blog Layout.
+    // Find the Blog Layout. This one is now a common item.
     await page.locator('button[aria-controls="attrib-advanced"]').first().click();
-    await page.screenshot({ path: grabs + language + '/images/menu-items/articles-category-blog-blog-layout-tab.png', fullPage: true });
+    await page.screenshot({ path: grabs + language + '/images/menu-items-common/articles-category-blog-blog-layout-tab.png', fullPage: true });
 
     // Find the Integration tab to store in menu-items-common.
     await page.locator('button[aria-controls="attrib-integration"]').first().click();

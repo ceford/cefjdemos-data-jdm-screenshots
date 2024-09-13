@@ -39,10 +39,10 @@ test('privacy dashboard', async ({ page, testurl, grabs, language }) => {
 test('privacy information requests', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,
-        height: 550,
+        height: 450,
     });
     await page.goto(testurl + 'option=com_privacy&view=requests');
-    await page.screenshot({ path: grabs + language + '/images/privacy/privacy-information-requests.png', fullPage: true});
+    await page.screenshot({ path: grabs + language + '/images/privacy/privacy-information-requests.png'});
 
     // Open the first item in the list
     const url = testurl + 'option=com_privacy&view=request&id=1';

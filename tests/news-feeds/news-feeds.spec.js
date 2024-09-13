@@ -83,7 +83,7 @@ test('news feeds categories', async ({ page, testurl, grabs, language }) => {
 test('news feeds options', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,
-        height: 550,
+        height: 750,
     });
     await page.goto(testurl + 'option=com_config&view=component&component=com_newsfeeds');
     await page.screenshot({ path: grabs + language + '/images/news-feeds/news-feeds-options-news-feed-tab.png', fullPage: true});
@@ -94,13 +94,13 @@ test('news feeds options', async ({ page, testurl, grabs, language }) => {
 
     // Find the Category tab.
     await page.locator('button[aria-controls="categories"]').first().click();
-    await page.screenshot({ path: grabs + language + '/images/news-feeds/news-feeds-options-categories-tab.png', fullPage: true});
+    await page.screenshot({ path: grabs + language + '/images/news-feeds/news-feeds-options-categories-tab.png'});
 
     // Find the List Layouts tab.
     await page.locator('button[aria-controls="listlayout"]').first().click();
-    await page.screenshot({ path: grabs + language + '/images/news-feeds/news-feeds-options-list-layouts-tab.png', fullPage: true});
+    await page.screenshot({ path: grabs + language + '/images/news-feeds/news-feeds-options-list-layouts-tab.png'});
 
     // Find the Integration tab.
     await page.locator('button[aria-controls="integration"]').first().click();
-    await page.screenshot({ path: grabs + language + '/images/news-feeds/news-feeds-options-integration-tab.png', fullPage: true});
+    await page.screenshot({ path: grabs + language + '/images/news-feeds/news-feeds-options-integration-tab.png'});
 });

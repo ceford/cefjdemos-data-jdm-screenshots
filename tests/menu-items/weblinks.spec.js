@@ -160,3 +160,41 @@ test('menu item submit a web link', async ({ page, testurl, grabs, language }) =
     // Close the article or it will be left checked out.
     await page.locator('.button-cancel').click();
 });
+
+test('menu item single weblink', async ({ page, testurl, grabs, language }) => {
+    await page.setViewportSize({
+        width: 1440,
+        height: 715,
+    });
+    await page.goto(testurl + 'option=com_menus&view=items&menutype=mainmenu');
+
+    // Select the New button
+    await page.locator('.button-new').first().click();
+
+    // Select the Menu Item Type Select button
+    await page.locator('.btn-primary').first().click();
+
+    // Wait for 3 seconds
+    await page.waitForTimeout(3000);
+
+    const fr = page.frameLocator('.iframe-content');
+
+    // Find all of the accordion buttons and expand them.
+    const buttons = fr.locator('.accordion-button');
+    const count = await buttons.count();
+    for (let i = 0; i < count; ++i)
+    await buttons.nth(i).click();
+
+    // Wait for 3 seconds
+    await page.waitForTimeout(3000);
+
+    // Select the List All Web Link Categories link
+    await fr.getByTestId('COM_WEBLINKS_WEBLINK_VIEW_DEFAULT_TITLE').first().click();
+
+    // Wait for 3 seconds
+    await page.waitForTimeout(3000);
+    await page.screenshot({ path: grabs + language + '/images/menu-items/weblinks-single-weblink-details-tab.png'});
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
+});

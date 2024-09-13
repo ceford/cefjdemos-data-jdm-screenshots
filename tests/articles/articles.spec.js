@@ -147,16 +147,17 @@ test('articles edit category category tab', async ({ page, testurl, grabs, langu
 
     await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-category-category-tab.png', fullPage: true });
 
-    // Find the Publishing tab.
-    let btn = await page.locator('button[aria-controls="publishing"]');
-    await btn.nth(0).click();
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-category-publishing-tab.png', fullPage: true });
+    // Find the Publishing tab. Not used
+    //let btn = await page.locator('button[aria-controls="publishing"]');
+    //await btn.nth(0).click();
+    //await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-category-publishing-tab.png', fullPage: true });
 
     // Close the article or it will be left checked out.
     await page.locator('.button-cancel').click();
 });
 
-test('articles edit category publishing tab', async ({ page, testurl, grabs, language, country }) => {
+/*
+test('articles edit category workflow tab', async ({ page, testurl, grabs, language, country }) => {
     // Open the list page.
     await page.goto(testurl + 'option=com_categories&view=categories&extension=com_content');
 
@@ -167,16 +168,16 @@ test('articles edit category publishing tab', async ({ page, testurl, grabs, lan
     let link = page.getByRole('link',{name: country});
     await link.first().click();
 
-    // Find the Publishing tab.
-    let btn = await page.locator('button[aria-controls="publishing"]');
+    // Find the Workflow tab. Requires workflow to be enable - not worth it!
+    let btn = await page.locator('button[aria-controls="attrib-workflow"]');
     await btn.nth(0).click();
 
-    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-category-publishing-tab.png', fullPage: true });
+    await page.screenshot({ path: grabs + language + '/images/articles/articles-edit-category-workflow-tab.png', fullPage: true });
 
     // Close the article or it will be left checked out.
     await page.locator('.button-cancel').click();
 });
-
+*/
 test('articles featured list', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,

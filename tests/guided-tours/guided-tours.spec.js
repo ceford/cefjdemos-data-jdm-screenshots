@@ -86,3 +86,12 @@ test('guided tours edit step', async ({ page, testurl, grabs, language }) => {
     await page.locator('.button-cancel').click();
 });
 
+test('guided tours options', async ({ page, testurl, grabs, language }) => {
+    await page.setViewportSize({
+        width: 1440,
+        height: 720,
+      });
+  await page.goto(testurl + 'option=com_config&view=component&component=com_guided_tours');
+
+  await page.screenshot({ path: grabs + language + '/images/guided-tours/guided-tours-options.png'});
+});

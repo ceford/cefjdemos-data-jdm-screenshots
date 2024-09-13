@@ -149,7 +149,7 @@ test('menu item category blog', async ({ page, testurl, grabs, language }) => {
 
     // Find the Category tab.
     await page.locator('button[aria-controls="attrib-basic"]').first().click();
-    await page.screenshot({ path: grabs + language + '/images/menu-items/menu-item-category-blog-category-tab.png', fullPage: true });
+    await page.screenshot({ path: grabs + language + '/images/menu-items-common/menu-item-category-blog-category-tab.png', fullPage: true });
 
     // Find the Blog Layout.
     await page.locator('button[aria-controls="attrib-advanced"]').first().click();
