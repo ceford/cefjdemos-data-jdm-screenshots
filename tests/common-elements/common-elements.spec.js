@@ -21,7 +21,7 @@ test.beforeEach(async ({ page, testurl, country, username, password }) => {
     await loginBtn.click();
 });
 
-test.afterEach(async ({ page, language, country }) => {
+test.afterEach(async ({ page, testurl, language, country }) => {
   if (test.info().status !== test.info().expectedStatus) {
     console.log(`\nTry command:\nURL=${testurl} LANGUAGE=${language} COUNTRY=${country} npx playwright test banners --project firefox --reporter dot -g "${test.info().title}"\n`);
   }
@@ -47,6 +47,9 @@ test('article edit toolbar', async ({ page, testurl, grabs, language, country })
         path: grabs + language + '/images/common-elements/article-edit-toolbar.png',
         clip: { x: 0, y: 0, width: 1440, height: 300 }
     });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
 });
 
 test('articles edit publishing tab', async ({ page, testurl, grabs, language }) => {
@@ -74,6 +77,7 @@ test('articles edit publishing tab', async ({ page, testurl, grabs, language }) 
     await btn.nth(0).click();
 
     await page.screenshot({ path: grabs + language + '/images/common-elements/articles-edit-association-tab.png', fullPage: true });
+
     // Close the article or it will be left checked out.
     await page.locator('.button-cancel').click();
 });
@@ -273,6 +277,33 @@ test('articles edit schema tab', async ({ page, testurl, grabs, language }) => {
     await page.locator('#jform_schema_schemaType').selectOption({index: 7});
 
     await page.screenshot({ path: grabs + language + '/images/common-elements/articles-edit-schema-tab-person.png', fullPage: true });
+
+    // Close the article or it will be left checked out.
+    await page.locator('.button-cancel').click();
+});
+
+test('articles edit versions popup', async ({ page, testurl, grabs, language, country }) => {
+    // Open the list page.
+    await page.goto(testurl + 'option=com_categories&view=categories&extension=com_content');
+
+    // Search for the selected language.
+    await page.locator('#filter_search').fill(country);
+    await page.locator('.filter-search-bar__button').click();
+
+    let link = page.getByRole('link',{name: country});
+    await link.first().click();
+
+    // Find the Versions Toolbar button.
+    let btn = await page.locator("#toolbar-versions");
+    await btn.click();
+
+    // Wait for the popup to appear.
+    await page.waitForTimeout(3000);
+
+    await page.screenshot({ path: grabs + language + '/images/common-elements/articles-edit-versions.png'});
+
+    // Close the Popup dialogue.
+    await page.locator('.button-close').click();
 
     // Close the article or it will be left checked out.
     await page.locator('.button-cancel').click();
