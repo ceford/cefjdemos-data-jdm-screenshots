@@ -44,3 +44,13 @@ test('plugins', async ({ page, testurl, grabs, language }) => {
     // Close the page or it will be left checked out.
     await page.locator('.button-cancel').click();
 });
+
+test('plugins latest actions', async ({ page, testurl, grabs, language }) => {
+    await page.setViewportSize({
+        width: 1440,
+        height: 550,
+    });
+    await page.goto(testurl);
+    // The module needs to have this class added in its Advanced tab.
+    await page.locator('.playwright-latest-actions').screenshot({ path: grabs + language + '/images/plugins/plugins-user-actions-log-latest-actions.png' });
+});

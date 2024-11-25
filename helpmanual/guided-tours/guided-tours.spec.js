@@ -90,8 +90,11 @@ test('guided tours options', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({
         width: 1440,
         height: 720,
-      });
-  await page.goto(testurl + 'option=com_config&view=component&component=com_guided_tours');
+    });
+    await page.goto(testurl + 'option=com_config&view=component&component=com_guided_tours');
 
-  await page.screenshot({ path: grabs + language + '/images/guided-tours/guided-tours-options.png'});
+    // Wait for 3 seconds for the Notifications to complete
+    await page.waitForTimeout(5000);
+
+    await page.screenshot({ path: grabs + language + '/images/guided-tours/guided-tours-options.png'});
 });

@@ -37,6 +37,53 @@ test('modules available', async ({ page, testurl, grabs, language }) => {
     await page.screenshot({ path: grabs + language + '/images/modules-site/modules-site-available.png', fullPage: true});
 });
 
+test('modules articles multi', async ({ page, testurl, grabs, language }) => {
+    await page.setViewportSize({
+        width: 1440,
+        height: 600,
+    });
+
+    await page.goto(testurl + 'option=com_modules&task=module.add&client_id=0&eid=256');
+
+    // Select the Inline Help button
+    await page.locator('.button-inlinehelp').click();
+
+    // Select the Dynamic option
+    await page.locator('#jform_params_mode').selectOption('dynamic');
+
+    // Select the Group Add button
+    await page.locator('.group-add').first().click();
+
+    // Scroll to the top of the page
+    await page.evaluate(() => window.scrollTo(0, 0));
+
+    // Wait for 3 seconds
+    await page.waitForTimeout(3000);
+
+    await page.screenshot({ path: grabs + language + '/images/modules-site/modules-articles-module-tab.png', fullPage: true});
+
+    // Select the Display Options tab
+    await page.locator('button[aria-controls="attrib-display"]').first().click();
+
+    // Find and click Yes to change it to No
+    await page.locator('#jform_params_title_only0').click();
+    await page.screenshot({ path: grabs + language + '/images/modules-site/modules-articles-display-options-tab.png', fullPage: true});
+
+    // Select the Filtering Options tab
+    await page.locator('button[aria-controls="attrib-filtering"]').first().click();
+    await page.screenshot({ path: grabs + language + '/images/modules-site/modules-articles-filtering-options-tab.png', fullPage: true});
+
+    // Select the Ordering Options tab
+    await page.locator('button[aria-controls="attrib-ordering"]').first().click();
+    await page.screenshot({ path: grabs + language + '/images/modules-site/modules-articles-ordering-options-tab.png'});
+
+    // Select the Grouping Options tab
+    await page.locator('button[aria-controls="attrib-grouping"]').first().click();
+    // Find and select Year from the Article Grouping field
+    await page.locator('#jform_params_article_grouping').selectOption('year');
+    await page.screenshot({ path: grabs + language + '/images/modules-site/modules-articles-grouping-options-tab.png', fullPage: true});
+});
+
 test('modules articles archived', async ({ page, testurl, grabs, language }) => {
     await page.goto(testurl + 'option=com_modules&task=module.add&client_id=0&eid=39');
     await page.screenshot({ path: grabs + language + '/images/modules-site/modules-articles-archived-module-tab.png', fullPage: true});

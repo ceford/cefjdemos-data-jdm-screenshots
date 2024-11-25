@@ -102,8 +102,9 @@ test('users groups', async ({ page, testurl, grabs, language }) => {
     // Select the list limit button
     await page.locator('#list_limit').selectOption({value: '10'});
 
-    // Wait for 3 seconds for the page to reoload.
+    // Wait for 3 seconds for the page to reload.
     await page.waitForTimeout(3000);
+
     await page.screenshot({ path: grabs + language + '/images/users/users-groups-list.png', fullPage: true});
 
     // Find the New button.
@@ -195,7 +196,7 @@ test('users user actions log options', async ({ page, testurl, grabs, language }
     await page.goto(testurl + 'option=com_config&view=component&component=com_actionlogs');
 
     await page.screenshot({ path: grabs + language + '/images/users/user-actions-log-options-options-tab.png', fullPage: true});
-  });
+});
 
 test('users options', async ({ page, testurl, grabs, language }) => {
     await page.setViewportSize({

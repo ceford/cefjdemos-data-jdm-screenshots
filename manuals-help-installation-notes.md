@@ -24,7 +24,7 @@ but some preparation is needed first. This could be scripted!
 2.  Create Super User Playwright playwright (play123456)
 3.  Create a private message from Superman to Playwright:
     Subject: Demonstration; Text: This is a demonstration Private Message.
-4.  Create group Oddjob with Special access.
+4.  Create group Oddjob with Parent: Public and add to Groups with Special access.
     Create user Oddjob / oddjob / (oddjob123%) in Group Oddjob (not Registered)
     Edit Global Configuration: set Administrator login to Allowed for Oddjob
     Edit Media / Options: set Access Admin Interface, Create, Delete and Edit
@@ -38,7 +38,7 @@ but some preparation is needed first. This could be scripted!
     There may be a problem that shows the Subject as PLG_SYSTEM_PRIVACYCONSENT_SUBJECT
     instead of *Privacy Policy* in the Privacy Consents list. It is due to this
     code missing from:
-    `plugins/system/privacyconsent/src/Extension/PrivacyConsent.php` from line 33.
+    `plugins/system/privacyconsent/src/Extension/PrivacyConsent.php` from about line 39.
 ```
     /**
      * Load the language file on instantiation.
@@ -49,6 +49,7 @@ but some preparation is needed first. This could be scripted!
     protected $autoloadLanguage = true;
 ```
 11. Create a Privacy Request. Login to backend as the playwright user:
+    From User / Privacy / Requests
     create a request for johndoe@example.com / Export
     Logout and login again as your normal Super Admin user.
 12. The System - Schema.org Plugin needs to be enabled and have a
@@ -70,7 +71,6 @@ but some preparation is needed first. This could be scripted!
 17. Install the Joomla Patchtester (there is an Options Help screen).
 18. OPTION: install Akeeba Backup and take a backup to use for more installations.
     ???? Then uninstall Akeeba Backup to save space in Admin menu.
-
 19. Install One Language: de or fr or nl (separate installs for each language)
     Currently installing in J6 by file upload.
 20. Publish Content Language
@@ -91,6 +91,8 @@ but some preparation is needed first. This could be scripted!
     Set Support Joomla Banner Details / Client to Joomla
     In the frontend Reload some pages a few times and click the
     Support Joomla Banner at the page bottom to generate some hits.
+25. Add classes so playwright can find certain elements:
+    - Administrator Module, Latest Actions, Advanced tab, Module Class: playwright-latest-actions
 
 ## Ready to run the Playwright tests
 
