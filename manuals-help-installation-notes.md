@@ -2,42 +2,31 @@
 
 ## Joomla Installations
 
-Create a separate Joomla installation for each supported language. Each should
-be named jcms6xx where xx is the language code. jcms6de may be used to capture
-screens for both English and German.
+Create a separate Joomla installation for each supported language. Each should be named jnnnxx where nnn is a version number such as 530 and xx is the language code. j5306de may be used to capture screens for both English and German.
 
-Go to the GitHub [Joomla repo](https://github.com/joomla/joomla-cms) and select
-the 6.0-dev branch. Scroll down to the *Steps to setup the local environment:*
-heading and follow the instructions to clone Joomla and set up a working site.
-Rename the site from joomla-cms to jcms6xx and use a database with a
-corresponding name. Do not use this site for anything other than screenshot
-capture.
+Use the latest stable version! Download, unpack then rename the folder. Do not use this site for anything other than screenshot capture.
 
-The method adopted mostly uses Multilingual Sample Data and Testing Sample Data
-but some preparation is needed first. This could be scripted!
+The method adopted mostly uses Multilingual Sample Data and Testing Sample Data but some preparation is needed first. This could be scripted!
 
 ## Prepare a Joomla installation for Screen Capture
 
 1.  Install Joomla - set admin user name to Superman
-    Set the Cookie Path to /jcms6xx
-    Set default list limit to 5.
+    - Set the Cookie Path to /jnnnxx
+    - Set default list limit to 5.
 2.  Create Super User Playwright playwright (play123456)
 3.  Create a private message from Superman to Playwright:
-    Subject: Demonstration; Text: This is a demonstration Private Message.
+    - Subject: Demonstration; Text: This is a demonstration Private Message.
 4.  Create group Oddjob with Parent: Public and add to Groups with Special access.
-    Create user Oddjob / oddjob / (oddjob123%) in Group Oddjob (not Registered)
-    Edit Global Configuration: set Administrator login to Allowed for Oddjob
-    Edit Media / Options: set Access Admin Interface, Create, Delete and Edit
-    to Allowed.
+    - Create user Oddjob / oddjob / (oddjob123%) in Group Oddjob (not Registered)
+    - Edit Global Configuration: set Administrator login to Allowed for Oddjob
+    - Edit Media / Options: set Access Admin Interface, Create, Delete and Edit to Allowed.
 5.  Create user John Doe for user tests:
-    John Doe / johndoe / (johndoe123) / johndoe@example.com
+    - John Doe / johndoe / (johndoe123) / johndoe@example.com
 6.  Create a user note for John Doe:
-    Demonstration / Uncategorised / John Doe is a pseudonym for an unknown person.
+    - Demonstration / Uncategorised / John Doe is a pseudonym for an unknown person.
 10. Enable the System - Privacy Consent plugin.
-    Login to frontend as johndoe and confirm privacy consent. Then logout.
-    There may be a problem that shows the Subject as PLG_SYSTEM_PRIVACYCONSENT_SUBJECT
-    instead of *Privacy Policy* in the Privacy Consents list. It is due to this
-    code missing from:
+    - Login to frontend as johndoe and confirm privacy consent. Then logout.
+    - There may be a problem that shows the Subject as PLG_SYSTEM_PRIVACYCONSENT_SUBJECT instead of *Privacy Policy* in the Users/Privacy/Consents list. It is due to this code missing from:
     `plugins/system/privacyconsent/src/Extension/PrivacyConsent.php` from about line 39.
 ```
     /**
@@ -49,50 +38,51 @@ but some preparation is needed first. This could be scripted!
     protected $autoloadLanguage = true;
 ```
 11. Create a Privacy Request. Login to backend as the playwright user:
-    From User / Privacy / Requests
-    create a request for johndoe@example.com / Export
-    Logout and login again as your normal Super Admin user.
-12. The System - Schema.org Plugin needs to be enabled and have a
-    name inserted in the Name field, for example: Joomla Documentation Team
-13. Enable the System - Redirect Plugin and go to System / Redirects to create
-    a New redirect:
-    Expired URL: about-me.html New URL: https://example.com/about-others.html
-    Comment: An example redirect.
+    - From User / Privacy / Requests
+    - create a request for johndoe@example.com / Export
+    - Logout and login again as your normal Super Admin user.
+12. The System - Schema.org Plugin needs to be enabled and have a name inserted in the Name field, for example: Joomla Documentation Team
+13. Enable the System - Redirect Plugin and go to System / Redirects to create a New redirect:
+    - Expired URL: about-me.html New URL: https://example.com/about-others.html
+    - Comment: An example redirect.
 14. Create two Content Fields:
-    About the Author / Textarea / Brief biography. / 4 Rows
-    Article Sources / Textarea / List of sources for this article. / 4 Rows
-15. Create an Article Field Group: Nature / For fields about the natural world.
-16. Install the Weblinks component
-    First time try did not work - needed to create the table by
-    extracting sql from zip file. But next time it installed without problems.
-    Create a Category (Uncategorised) if not present and then a link:
-    Joomla Magazine Tutorials / https://docs.joomla.org/J4.x:Magazine_Articles
-    A list of articles with tutorial content for Joomla 4 and 5.
+    - About the Author / Textarea / Brief biography. / 4 Rows
+    - Article Sources / Textarea / List of sources for this article. / 4 Rows
+15. - Create an Article Field Group: Nature / For fields about the natural world.
+16. - Install the Weblinks component
+    - First time try did not work - needed to create the table by extracting sql from zip file. But next time it installed without problems.
+    - Create a Category (Uncategorised) if not present and then a link:
+    - Joomla Magazine Tutorials / https://docs.joomla.org/J4.x:Magazine_Articles
+    - A list of articles with tutorial content for Joomla 4 and 5.
 17. Install the Joomla Patchtester (there is an Options Help screen).
 18. OPTION: install Akeeba Backup and take a backup to use for more installations.
     ???? Then uninstall Akeeba Backup to save space in Admin menu.
 19. Install One Language: de or fr or nl (separate installs for each language)
-    Currently installing in J6 by file upload.
 20. Publish Content Language
 21. Install Multilingual Sample Data
 22. Install Testing Sample Data (NOT Blog Sample Data).
+    - Copy the plugin from a git clone installation.
+    - Use the Discover feature to install the plugin.
+    - Enable the plugin and then install the Testing Sample Data.
 23. Run the Smart Search Indexer
-    Create a Smart Search Filter as the Superman Super User
-    Articles by Joomla / Articles / Author: Joomla
-    In Smart Search Options set Gather Search Statistics to Yes.
-    In the frontend sidebar-left is a Smart Search Component item.
-    Search for some terms (lorem, animals, apples, english)
+    - Create a Smart Search Filter as the Superman Super User
+    - Articles by Joomla / Articles / Author: Joomla
+    - In Smart Search Options set Gather Search Statistics to Yes.
+    - In the frontend sidebar-left is a Smart Search Component item.
+    - Search for some terms (lorem, animals, apples, english)
 24. Banners / Options /
-    Track Impressions = Yes
-    Track Clicks = Yes
-    In the Banner list, edit each item:
-    Set Shop 1 Banner Details / Client to Bookstore
-    Set Shop 2 Banner Details / Client to Shop
-    Set Support Joomla Banner Details / Client to Joomla
-    In the frontend Reload some pages a few times and click the
-    Support Joomla Banner at the page bottom to generate some hits.
+    - Track Impressions = Yes
+    - Track Clicks = Yes
+    - In the Banner list, edit each item:
+    - Set Shop 1 Banner Details / Client to Bookstore
+    - Set Shop 2 Banner Details / Client to Shop
+    - Set Support Joomla Banner Details / Client to Joomla
+    - In the frontend Reload some pages a few times and click the
+    - Support Joomla Banner at the page bottom to generate some hits.
 25. Add classes so playwright can find certain elements:
     - Administrator Module, Latest Actions, Advanced tab, Module Class: playwright-latest-actions
+26. System / Scheduled Tasks - run each of the tests to generate statistics.
+    - Select Options, enable Web Cron and Save to see extra fields.
 
 ## Ready to run the Playwright tests
 

@@ -5,7 +5,7 @@ exports.test = base.test.extend({
     grabs: ['/users/ceford/git/cefjdemos/manuals/help/', { option: true }],
 
     // The URL to use for default English screenshots.
-    testurl: process.env.URL || 'http://localhost/jcms6de/administrator/index.php?',
+    testurl: process.env.URL || 'http://localhost/j530de/administrator/index.php?',
 
     // The command line to use:
     // URL=http://localhost/jcms6de/administrator/index.php? LANGUAGE=en COUNTRY=en-GB  npx playwright test --project firefox --reporter dot
